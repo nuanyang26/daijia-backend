@@ -1,7 +1,6 @@
 package com.atguigu.daijia.order.service.impl;
 
 import com.atguigu.daijia.common.constant.RedisConstant;
-import com.atguigu.daijia.common.constant.SystemConstant;
 import com.atguigu.daijia.common.execption.GuiguException;
 import com.atguigu.daijia.common.result.ResultCodeEnum;
 import com.atguigu.daijia.model.entity.order.OrderBill;
@@ -24,13 +23,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.redisson.api.*;
+import org.redisson.api.RBlockingQueue;
+import org.redisson.api.RDelayedQueue;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
@@ -77,7 +78,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         //向redis添加标识
         //接单标识，标识不存在了说明不在等待接单状态了
-        redisTemplate.opsForValue().set(RedisConstant.ORDER_ACCEPT_MARK,
+        redisTemplate.opsForValue().set(RedisConstant.ORDER_ACCEPT_MARK + orderInfo.getId(),
                 "0", RedisConstant.ORDER_ACCEPT_MARK_EXPIRES_TIME, TimeUnit.MINUTES);
 
         return orderInfo.getId();
@@ -124,7 +125,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Override
     public Boolean robNewOrder(Long driverId, Long orderId) {
         //判断订单是否存在，通过Redis，减少数据库压力
-        if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK)) {
+        if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
             //抢单失败
             throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
         }
@@ -136,7 +137,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             //获取锁
             boolean flag = lock.tryLock(RedisConstant.ROB_NEW_ORDER_LOCK_WAIT_TIME,RedisConstant.ROB_NEW_ORDER_LOCK_LEASE_TIME, TimeUnit.SECONDS);
             if(flag) {
-                if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK)) {
+                if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
                     //抢单失败
                     throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
                 }
@@ -158,7 +159,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 }
 
                 //删除抢单标识
-                redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK);
+                redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK + orderId);
             }
         }catch (Exception e) {
             //抢单失败
@@ -474,7 +475,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             if(rows == 1) {
                 //删除接单标识
 
-                redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK);
+                redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK + orderId);
             }
         }
     }
@@ -498,7 +499,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     //司机抢单：乐观锁方案解决并发问题
     public Boolean robNewOrder1(Long driverId, Long orderId) {
         //判断订单是否存在，通过Redis，减少数据库压力
-        if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK)) {
+        if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
             //抢单失败
             throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
         }
@@ -524,7 +525,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
 
         //删除抢单标识
-        redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK);
+        redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK + orderId);
         return true;
     }
 }
