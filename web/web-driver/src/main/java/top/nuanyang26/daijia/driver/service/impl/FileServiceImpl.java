@@ -14,6 +14,7 @@ import top.nuanyang26.daijia.driver.service.FileService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -31,19 +32,19 @@ public class FileServiceImpl implements FileService {
                     .endpoint(minioProperties.getEndpointUrl())
                     .credentials(minioProperties.getAccessKey(), minioProperties.getSecreKey())
                     .build();
-
+            String bucketName = minioProperties.getBucketName();
             // 判断桶是否存在
-            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(minioProperties.getBucketName()).build());
+            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
             if (!found) {       // 如果不存在，那么此时就创建一个新的桶
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(minioProperties.getBucketName()).build());
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
             } else {  // 如果存在打印信息
-                System.out.println("Bucket 'daijia' already exists.");
+                System.out.printf("Bucket '%s' already exists", bucketName);
             }
 
             // 设置存储对象名称
             String extFileName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
             String fileName = new SimpleDateFormat("yyyyMMdd")
-                    .format(new Date()) + "/" + UUID.randomUUID().toString().replace("-" , "") + "." + extFileName;
+                    .format(new Date()) + "/" + UUID.randomUUID().toString().replace("-" , "") + extFileName;
 
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .bucket(minioProperties.getBucketName())
@@ -52,7 +53,17 @@ public class FileServiceImpl implements FileService {
                     .build();
             minioClient.putObject(putObjectArgs) ;
 
-            return minioProperties.getEndpointUrl() + "/" + minioProperties.getBucketName() + "/" + fileName ;
+            // 生成预签名 URL
+            GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder()
+                    .method(io.minio.http.Method.GET)
+                    .bucket(bucketName)
+                    .object(fileName)
+                    .expiry(SystemConstant.CAR_IMG_URL_TIMEOUT, TimeUnit.DAYS)
+                    .build();
+
+            String showUrl = minioClient.getPresignedObjectUrl(args);
+
+            return showUrl;
 
         } catch (Exception e) {
             throw new TonyException(ResultCodeEnum.DATA_ERROR);

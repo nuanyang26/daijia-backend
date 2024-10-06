@@ -32,6 +32,7 @@ public class FileController {
 //        String showUrl = cosUploadVo.getShowUrl();
 //        return Result.ok(showUrl);
 //    }
+//    使用下面的 上传到 minio 代替了
 
     @Operation(summary = "上传")
     @PostMapping("/upload")

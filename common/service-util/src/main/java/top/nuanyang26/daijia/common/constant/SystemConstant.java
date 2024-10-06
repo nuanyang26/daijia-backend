@@ -20,4 +20,6 @@ public class SystemConstant {
     //分账延迟时间，单位：秒
     public static final int PROFITSHARING_DELAY_TIME = 2*60;
 
+    //车辆前后照过期时间，单位：天
+    public static final int CAR_IMG_URL_TIMEOUT = 7;
 }
