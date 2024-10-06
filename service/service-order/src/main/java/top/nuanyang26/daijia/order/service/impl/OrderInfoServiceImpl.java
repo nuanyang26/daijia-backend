@@ -473,19 +473,47 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     //调用方法取消订单
     @Override
     public void orderCancel(long orderId) {
-        //orderId查询订单信息
-        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
-        //判断
-        if(orderInfo.getStatus()==OrderStatus.WAITING_ACCEPT.getStatus()) {
-            //修改订单状态：取消状态
-            orderInfo.setStatus(OrderStatus.CANCEL_ORDER.getStatus());
-            int rows = orderInfoMapper.updateById(orderInfo);
-            if(rows == 1) {
-                //删除接单标识
+        // 如果这时候刚好有司机接单呢， 判断前面抢单加的锁rob。这个取消也相当于是在抢订单的处理权
 
-                redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK + orderId);
+        //判断订单是否存在，通过Redis，减少数据库压力
+        if (!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
+            //抢锁失败
+            throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+        }
+        //创建锁
+        RLock lock = redissonClient.getLock(RedisConstant.ROB_NEW_ORDER_LOCK + orderId);
+        try {
+            //获取锁
+            boolean flag = lock.tryLock(RedisConstant.ROB_NEW_ORDER_LOCK_WAIT_TIME, RedisConstant.ROB_NEW_ORDER_LOCK_LEASE_TIME, TimeUnit.SECONDS);
+            if (flag) {
+                if (!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
+                    //抢锁失败
+                    throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+                }
+                //抢锁成功
+                OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+                //判断
+                if (orderInfo.getStatus() == OrderStatus.WAITING_ACCEPT.getStatus()) {
+                    //修改订单状态：取消状态
+                    orderInfo.setStatus(OrderStatus.CANCEL_ORDER.getStatus());
+                    int rows = orderInfoMapper.updateById(orderInfo);
+                    if (rows == 1) {
+                        //删除接单标识
+                        redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK + orderId);
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            //抢锁失败
+            throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+        } finally {
+            //释放
+            if (lock.isLocked()) {
+                lock.unlock();
             }
         }
+
     }
 
     @Override
