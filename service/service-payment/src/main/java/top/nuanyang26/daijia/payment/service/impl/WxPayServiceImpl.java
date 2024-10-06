@@ -180,7 +180,7 @@ public class WxPayServiceImpl implements WxPayService {
     }
 
     //支付成功后续处理
-//    @GlobalTransactional
+    @GlobalTransactional
     @Override
     public void handleOrder(String orderNo) {
         //1 远程调用：更新订单状态：已经支付
