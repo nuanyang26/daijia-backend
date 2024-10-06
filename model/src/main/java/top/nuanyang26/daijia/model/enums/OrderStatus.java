@@ -27,11 +27,5 @@ public enum OrderStatus {
         this.comment = comment;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+    // 枚举类不需要Setter 设计的初衷就是为了创建一组固定的常量值
 }
