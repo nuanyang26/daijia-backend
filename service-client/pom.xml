@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.atguigu.daijia</groupId>
-        <artifactId>daijia-parent</artifactId>
+        <groupId>top.nuanyang26.daijia</groupId>
+        <artifactId>daijia-backend</artifactId>
         <version>1.0</version>
     </parent>
 
@@ -27,13 +27,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>common-util</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>model</artifactId>
             <version>1.0</version>
         </dependency>

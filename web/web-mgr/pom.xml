@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.atguigu.daijia</groupId>
+		<groupId>top.nuanyang26.daijia</groupId>
 		<artifactId>web</artifactId>
 		<version>1.0</version>
 	</parent>
@@ -18,7 +18,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.atguigu.daijia</groupId>
+			<groupId>top.nuanyang26.daijia</groupId>
 			<artifactId>spring-security</artifactId>
 			<version>1.0</version>
 		</dependency>

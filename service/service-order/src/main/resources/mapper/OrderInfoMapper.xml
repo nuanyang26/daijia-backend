@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.atguigu.daijia.order.mapper.OrderInfoMapper">
+<mapper namespace="top.nuanyang26.daijia.order.mapper.OrderInfoMapper">
 
-    <select id="selectOrderPayVo" resultType="com.atguigu.daijia.model.vo.order.OrderPayVo">
+    <select id="selectOrderPayVo" resultType="top.nuanyang26.daijia.model.vo.order.OrderPayVo">
         select
             info.id as order_id,
             info.customer_id,
@@ -20,7 +20,7 @@
           and info.order_no = #{orderNo}
     </select>
 
-    <select id="selectDriverOrderPage" resultType="com.atguigu.daijia.model.vo.order.OrderListVo">
+    <select id="selectDriverOrderPage" resultType="top.nuanyang26.daijia.model.vo.order.OrderListVo">
         select
             info.id,
             info.order_no,
@@ -38,7 +38,7 @@
     </select>
 
     <!--查询乘客订单分页-->
-    <select id="selectCustomerOrderPage" resultType="com.atguigu.daijia.model.vo.order.OrderListVo">
+    <select id="selectCustomerOrderPage" resultType="top.nuanyang26.daijia.model.vo.order.OrderListVo">
         select
             info.id,
             info.order_no,

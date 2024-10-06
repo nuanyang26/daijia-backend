@@ -1,4 +1,4 @@
-package com.atguigu.daijia
+package top.nuanyang26.daijia
 
 rule "rule_1"
 

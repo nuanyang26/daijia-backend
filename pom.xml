@@ -10,8 +10,8 @@
         <!-- 版本对应： https://start.spring.io/actuator/info -->
     </parent>
 
-    <groupId>com.atguigu.daijia</groupId>
-    <artifactId>daijia-parent</artifactId>
+    <groupId>top.nuanyang26.daijia</groupId>
+    <artifactId>daijia-backend</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
 

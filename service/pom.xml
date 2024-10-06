@@ -3,8 +3,8 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.atguigu.daijia</groupId>
-        <artifactId>daijia-parent</artifactId><version>1.0</version>
+        <groupId>top.nuanyang26.daijia</groupId>
+        <artifactId>daijia-backend</artifactId><version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,48 +26,48 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>service-util</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>common-log</artifactId>
             <version>1.0</version>
         </dependency>
 
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>service-system-client</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>service-coupon-client</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>service-driver-client</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>service-order-client</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>service-customer-client</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>service-rules-client</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.atguigu.daijia</groupId>
+            <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>service-map-client</artifactId>
             <version>1.0</version>
         </dependency>
