@@ -89,7 +89,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private void sendDelayMessage(Long orderId) {
         try{
             //1 创建队列
-            RBlockingQueue<Object> blockingDueue = redissonClient.getBlockingQueue("queue_cancel");
+            RBlockingQueue<Object> blockingDueue = redissonClient.getBlockingQueue(RedisConstant.QUEUE_ORDER_CANCEL);
 
             //2 把创建队列放到延迟队列里面
             RDelayedQueue<Object> delayedQueue = redissonClient.getDelayedQueue(blockingDueue);

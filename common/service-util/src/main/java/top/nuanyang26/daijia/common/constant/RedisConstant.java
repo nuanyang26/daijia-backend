@@ -36,6 +36,9 @@ public class RedisConstant {
     //加锁的时间
     public static final long ROB_NEW_ORDER_LOCK_LEASE_TIME = 1;
 
+    //订单超时取消，延迟队列
+    public static final String QUEUE_ORDER_CANCEL = "queue_order_cancel";
+
     //优惠券信息
     public static final String COUPON_INFO = "coupon:info:";
 
