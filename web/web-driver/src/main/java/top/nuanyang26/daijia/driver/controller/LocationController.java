@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.nuanyang26.daijia.common.login.GuiguLogin;
+import top.nuanyang26.daijia.common.login.TonyLogin;
 import top.nuanyang26.daijia.common.result.Result;
 import top.nuanyang26.daijia.common.util.AuthContextHolder;
 import top.nuanyang26.daijia.driver.service.LocationService;
@@ -29,7 +29,7 @@ public class LocationController {
     private LocationService locationService;
 
     @Operation(summary = "开启接单服务：更新司机经纬度位置")
-    @GuiguLogin
+    @TonyLogin
     @PostMapping("/updateDriverLocation")
     public Result<Boolean> updateDriverLocation(@RequestBody UpdateDriverLocationForm updateDriverLocationForm) {
         Long driverId = AuthContextHolder.getUserId();//司机id
@@ -38,7 +38,7 @@ public class LocationController {
     }
 
     @Operation(summary = "司机赶往代驾起始点：更新订单位置到Redis缓存")
-    @GuiguLogin
+    @TonyLogin
     @PostMapping("/updateOrderLocationToCache")
     public Result updateOrderLocationToCache(@RequestBody UpdateOrderLocationForm updateOrderLocationForm) {
         return Result.ok(locationService.updateOrderLocationToCache(updateOrderLocationForm));

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import top.nuanyang26.daijia.common.constant.RedisConstant;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.Result;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.dispatch.client.NewOrderFeignClient;
@@ -96,13 +96,13 @@ public class DriverServiceImpl implements DriverService {
         //1 判断完成认证
         DriverLoginVo driverLoginVo = driverInfoFeignClient.getDriverLoginInfo(driverId).getData();
         if(driverLoginVo.getAuthStatus()!=2) {
-            throw new GuiguException(ResultCodeEnum.AUTH_ERROR);
+            throw new TonyException(ResultCodeEnum.AUTH_ERROR);
         }
 
         //2 判断当日是否人脸识别
         Boolean isFace = driverInfoFeignClient.isFaceRecognition(driverId).getData();
         if(!isFace) {
-            throw new GuiguException(ResultCodeEnum.FACE_ERROR);
+            throw new TonyException(ResultCodeEnum.FACE_ERROR);
         }
 
         //3 更新订单状态 1 开始接单

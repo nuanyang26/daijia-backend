@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import top.nuanyang26.daijia.common.login.GuiguLogin;
+import top.nuanyang26.daijia.common.login.TonyLogin;
 import top.nuanyang26.daijia.common.result.Result;
 import top.nuanyang26.daijia.common.util.AuthContextHolder;
 import top.nuanyang26.daijia.customer.service.CustomerService;
@@ -23,7 +23,7 @@ public class CustomerController {
     private CustomerService customerInfoService;
 
     @Operation(summary = "获取客户登录信息")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("/getCustomerLoginInfo")
     public Result<CustomerLoginVo> getCustomerLoginInfo() {
 
@@ -58,7 +58,7 @@ public class CustomerController {
     }
 
     @Operation(summary = "更新用户微信手机号")
-    @GuiguLogin
+    @TonyLogin
     @PostMapping("/updateWxPhone")
     public Result updateWxPhone(@RequestBody UpdateWxPhoneForm updateWxPhoneForm) {
         updateWxPhoneForm.setCustomerId(AuthContextHolder.getUserId());

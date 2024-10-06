@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import top.nuanyang26.daijia.common.constant.SystemConstant;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.driver.config.MinioProperties;
 import top.nuanyang26.daijia.driver.service.FileService;
@@ -55,7 +55,7 @@ public class FileServiceImpl implements FileService {
             return minioProperties.getEndpointUrl() + "/" + minioProperties.getBucketName() + "/" + fileName ;
 
         } catch (Exception e) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
     }
 }

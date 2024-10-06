@@ -1,10 +1,6 @@
 package top.nuanyang26.daijia.dispatch.xxl.client;
 
 import com.alibaba.fastjson.JSONObject;
-import top.nuanyang26.daijia.common.execption.GuiguException;
-import top.nuanyang26.daijia.common.result.ResultCodeEnum;
-import top.nuanyang26.daijia.dispatch.xxl.config.XxlJobClientConfig;
-import top.nuanyang26.daijia.model.entity.dispatch.XxlJobInfo;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +10,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import top.nuanyang26.daijia.common.execption.TonyException;
+import top.nuanyang26.daijia.common.result.ResultCodeEnum;
+import top.nuanyang26.daijia.dispatch.xxl.config.XxlJobClientConfig;
+import top.nuanyang26.daijia.model.entity.dispatch.XxlJobInfo;
 
 @Slf4j
 @Component
@@ -54,7 +54,7 @@ public class XxlJobClient {
             return response.getBody().getLong("content");
         }
         log.info("调用xxl增加执行任务失败:{}", response.getBody().toJSONString());
-        throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        throw new TonyException(ResultCodeEnum.DATA_ERROR);
     }
 
     public Boolean startJob(Long jobId) {
@@ -72,7 +72,7 @@ public class XxlJobClient {
             return true;
         }
         log.info("启动xxl执行任务失败:{},返回信息:{}", jobId, response.getBody().toJSONString());
-        throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        throw new TonyException(ResultCodeEnum.DATA_ERROR);
     }
 
     public Boolean stopJob(Long jobId) {
@@ -90,7 +90,7 @@ public class XxlJobClient {
             return true;
         }
         log.info("停止xxl执行任务失败:{},返回信息:{}", jobId, response.getBody().toJSONString());
-        throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        throw new TonyException(ResultCodeEnum.DATA_ERROR);
     }
 
     public Boolean removeJob(Long jobId) {
@@ -108,7 +108,7 @@ public class XxlJobClient {
             return true;
         }
         log.info("删除xxl执行任务失败:{},返回信息:{}", jobId, response.getBody().toJSONString());
-        throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        throw new TonyException(ResultCodeEnum.DATA_ERROR);
     }
 
     public Long addAndStart(String executorHandler, String param, String corn, String desc) {
@@ -139,6 +139,6 @@ public class XxlJobClient {
             return response.getBody().getLong("content");
         }
         log.info("增加并开始执行xxl任务失败:{}", response.getBody().toJSONString());
-        throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        throw new TonyException(ResultCodeEnum.DATA_ERROR);
     }
 }

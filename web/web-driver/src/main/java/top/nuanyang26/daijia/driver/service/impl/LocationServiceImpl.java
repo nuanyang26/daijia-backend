@@ -3,7 +3,7 @@ package top.nuanyang26.daijia.driver.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.driver.client.DriverInfoFeignClient;
 import top.nuanyang26.daijia.driver.service.LocationService;
@@ -34,7 +34,7 @@ public class LocationServiceImpl implements LocationService {
         if(driverSet.getServiceStatus().intValue() == 1) {
             return locationFeignClient.updateDriverLocation(updateDriverLocationForm).getData();
         } else {
-            throw new GuiguException(ResultCodeEnum.NO_START_SERVICE);
+            throw new TonyException(ResultCodeEnum.NO_START_SERVICE);
         }
         //根据司机id获取司机个性化设置信息
 //        Long driverId = updateDriverLocationForm.getDriverId();
@@ -47,7 +47,7 @@ public class LocationServiceImpl implements LocationService {
 //            return booleanResult.getData();
 //        } else {
 //            //没有接单
-//            throw new GuiguException(ResultCodeEnum.NO_START_SERVICE);
+//            throw new TonyException(ResultCodeEnum.NO_START_SERVICE);
 //        }
     }
 

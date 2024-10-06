@@ -1,6 +1,13 @@
 package top.nuanyang26.daijia.system.service.impl;
 
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.model.entity.system.SysMenu;
 import top.nuanyang26.daijia.model.entity.system.SysRoleMenu;
@@ -11,13 +18,6 @@ import top.nuanyang26.daijia.system.helper.MenuHelper;
 import top.nuanyang26.daijia.system.mapper.SysMenuMapper;
 import top.nuanyang26.daijia.system.mapper.SysRoleMenuMapper;
 import top.nuanyang26.daijia.system.service.SysMenuService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -48,7 +48,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public boolean removeById(Serializable id) {
         long count = this.count(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getParentId, id));
         if (count > 0) {
-            throw new GuiguException(ResultCodeEnum.NODE_ERROR);
+            throw new TonyException(ResultCodeEnum.NODE_ERROR);
         }
         sysMenuMapper.deleteById(id);
         return false;

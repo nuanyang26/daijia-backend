@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import top.nuanyang26.daijia.common.constant.SystemConstant;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.driver.config.TencentCloudProperties;
 import top.nuanyang26.daijia.driver.mapper.*;
@@ -109,7 +109,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
             //返回司机id
             return driverInfo.getId();
         } catch (WxErrorException e) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
     }
 
@@ -283,7 +283,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
             System.out.println(e.toString());
         }
 
-        throw new GuiguException(ResultCodeEnum.FACE_REC_ERROR);
+        throw new TonyException(ResultCodeEnum.FACE_REC_ERROR);
     }
 
     //更新接单状态

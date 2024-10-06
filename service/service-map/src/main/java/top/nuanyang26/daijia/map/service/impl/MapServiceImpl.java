@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.map.service.MapService;
 import top.nuanyang26.daijia.model.form.map.CalculateDrivingLineForm;
@@ -52,7 +52,7 @@ public class MapServiceImpl implements MapService {
         //判断调用是否成功
         int status = result.getIntValue("status");
         if(status != 0) {//失败
-            throw new GuiguException(ResultCodeEnum.MAP_FAIL);
+            throw new TonyException(ResultCodeEnum.MAP_FAIL);
         }
 
         //获取返回路线信息

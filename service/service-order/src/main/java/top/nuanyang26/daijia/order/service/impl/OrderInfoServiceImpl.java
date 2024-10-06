@@ -1,24 +1,5 @@
 package top.nuanyang26.daijia.order.service.impl;
 
-import top.nuanyang26.daijia.common.constant.RedisConstant;
-import top.nuanyang26.daijia.common.execption.GuiguException;
-import top.nuanyang26.daijia.common.result.ResultCodeEnum;
-import top.nuanyang26.daijia.model.entity.order.*;
-import top.nuanyang26.daijia.model.entity.order.*;
-import top.nuanyang26.daijia.model.enums.OrderStatus;
-import top.nuanyang26.daijia.model.form.order.OrderInfoForm;
-import top.nuanyang26.daijia.model.form.order.StartDriveForm;
-import top.nuanyang26.daijia.model.form.order.UpdateOrderBillForm;
-import top.nuanyang26.daijia.model.form.order.UpdateOrderCartForm;
-import top.nuanyang26.daijia.model.vo.base.PageVo;
-import top.nuanyang26.daijia.model.vo.order.*;
-import top.nuanyang26.daijia.model.vo.order.*;
-import top.nuanyang26.daijia.order.mapper.OrderBillMapper;
-import top.nuanyang26.daijia.order.mapper.OrderInfoMapper;
-import top.nuanyang26.daijia.order.mapper.OrderProfitsharingMapper;
-import top.nuanyang26.daijia.order.mapper.OrderStatusLogMapper;
-import top.nuanyang26.daijia.order.service.OrderInfoService;
-import top.nuanyang26.daijia.order.service.OrderMonitorService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -31,6 +12,23 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import top.nuanyang26.daijia.common.constant.RedisConstant;
+import top.nuanyang26.daijia.common.execption.TonyException;
+import top.nuanyang26.daijia.common.result.ResultCodeEnum;
+import top.nuanyang26.daijia.model.entity.order.*;
+import top.nuanyang26.daijia.model.enums.OrderStatus;
+import top.nuanyang26.daijia.model.form.order.OrderInfoForm;
+import top.nuanyang26.daijia.model.form.order.StartDriveForm;
+import top.nuanyang26.daijia.model.form.order.UpdateOrderBillForm;
+import top.nuanyang26.daijia.model.form.order.UpdateOrderCartForm;
+import top.nuanyang26.daijia.model.vo.base.PageVo;
+import top.nuanyang26.daijia.model.vo.order.*;
+import top.nuanyang26.daijia.order.mapper.OrderBillMapper;
+import top.nuanyang26.daijia.order.mapper.OrderInfoMapper;
+import top.nuanyang26.daijia.order.mapper.OrderProfitsharingMapper;
+import top.nuanyang26.daijia.order.mapper.OrderStatusLogMapper;
+import top.nuanyang26.daijia.order.service.OrderInfoService;
+import top.nuanyang26.daijia.order.service.OrderMonitorService;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -102,7 +100,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         }catch (Exception e) {
             e.printStackTrace();
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
     }
 
@@ -130,7 +128,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         //判断订单是否存在，通过Redis，减少数据库压力
         if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
             //抢单失败
-            throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+            throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
         }
 
         //创建锁
@@ -142,7 +140,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             if(flag) {
                 if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
                     //抢单失败
-                    throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+                    throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
                 }
                 //司机抢单
                 //修改order_info表订单状态值2：已经接单 + 司机id + 司机接单时间
@@ -158,7 +156,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 int rows = orderInfoMapper.updateById(orderInfo);
                 if(rows != 1) {
                     //抢单失败
-                    throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+                    throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
                 }
 
                 //删除抢单标识
@@ -166,7 +164,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             }
         }catch (Exception e) {
             //抢单失败
-            throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+            throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
         }finally {
             //释放
             if(lock.isLocked()) {
@@ -260,7 +258,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if(rows == 1) {
             return true;
         } else {
-            throw new GuiguException(ResultCodeEnum.UPDATE_ERROR);
+            throw new TonyException(ResultCodeEnum.UPDATE_ERROR);
         }
     }
 
@@ -278,7 +276,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if(rows == 1) {
             return true;
         } else {
-            throw new GuiguException(ResultCodeEnum.UPDATE_ERROR);
+            throw new TonyException(ResultCodeEnum.UPDATE_ERROR);
         }
     }
 
@@ -298,7 +296,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if(rows == 1) {
             this.log(startDriveForm.getOrderId(), OrderStatus.START_SERVICE.getStatus());
         } else {
-            throw new GuiguException(ResultCodeEnum.UPDATE_ERROR);
+            throw new TonyException(ResultCodeEnum.UPDATE_ERROR);
         }
 
         // 初始化订单监控统计数据
@@ -354,7 +352,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             orderProfitsharingMapper.insert(orderProfitsharing);
 
         } else {
-            throw new GuiguException(ResultCodeEnum.UPDATE_ERROR);
+            throw new TonyException(ResultCodeEnum.UPDATE_ERROR);
         }
         return true;
     }
@@ -408,7 +406,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if(row == 1) {
             return true;
         } else {
-            throw new GuiguException(ResultCodeEnum.UPDATE_ERROR);
+            throw new TonyException(ResultCodeEnum.UPDATE_ERROR);
         }
     }
 
@@ -445,7 +443,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if(rows == 1) {
             return true;
         } else {
-            throw new GuiguException(ResultCodeEnum.UPDATE_ERROR);
+            throw new TonyException(ResultCodeEnum.UPDATE_ERROR);
         }
     }
 
@@ -511,7 +509,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         //判断订单是否存在，通过Redis，减少数据库压力
         if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
             //抢单失败
-            throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+            throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
         }
 
         //司机抢单
@@ -531,7 +529,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         int rows = orderInfoMapper.update(orderInfo,wrapper);
         if(rows != 1) {
             //抢单失败
-            throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+            throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
         }
 
         //删除抢单标识

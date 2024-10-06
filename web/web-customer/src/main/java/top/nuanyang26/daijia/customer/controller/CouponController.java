@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.nuanyang26.daijia.common.login.GuiguLogin;
+import top.nuanyang26.daijia.common.login.TonyLogin;
 import top.nuanyang26.daijia.common.result.Result;
 import top.nuanyang26.daijia.common.util.AuthContextHolder;
 import top.nuanyang26.daijia.customer.service.CouponService;
@@ -31,7 +31,7 @@ public class CouponController {
     private CouponService couponService;
 
     @Operation(summary = "查询未领取优惠券分页列表")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("findNoReceivePage/{page}/{limit}")
     public Result<PageVo<NoReceiveCouponVo>> findNoReceivePage(
             @Parameter(name = "page", description = "当前页码", required = true)
@@ -45,7 +45,7 @@ public class CouponController {
     }
 
     @Operation(summary = "查询未使用优惠券分页列表")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("findNoUsePage/{page}/{limit}")
     public Result<PageVo<NoUseCouponVo>> findNoUsePage(
             @Parameter(name = "page", description = "当前页码", required = true)
@@ -59,7 +59,7 @@ public class CouponController {
     }
 
     @Operation(summary = "领取优惠券")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("/receive/{couponId}")
     public Result<Boolean> receive(@PathVariable Long couponId) {
         Long customerId = AuthContextHolder.getUserId();
@@ -67,7 +67,7 @@ public class CouponController {
     }
 
     @Operation(summary = "获取未使用的最佳优惠券信息")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("/findAvailableCoupon/{orderId}")
     public Result<List<AvailableCouponVo>> findAvailableCoupon(@PathVariable Long orderId) {
         Long customerId = AuthContextHolder.getUserId();
@@ -75,7 +75,7 @@ public class CouponController {
     }
 
     @Operation(summary = "查询已使用优惠券分页列表")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("findUsedPage/{page}/{limit}")
     public Result<PageVo<UsedCouponVo>> findUsedPage(
             @Parameter(name = "page", description = "当前页码", required = true)

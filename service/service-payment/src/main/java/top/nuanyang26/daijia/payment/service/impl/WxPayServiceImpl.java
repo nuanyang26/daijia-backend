@@ -1,8 +1,21 @@
 package top.nuanyang26.daijia.payment.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.wechat.pay.java.core.RSAAutoCertificateConfig;
+import com.wechat.pay.java.core.notification.NotificationParser;
+import com.wechat.pay.java.core.notification.RequestParam;
+import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
+import com.wechat.pay.java.service.payments.jsapi.model.*;
+import com.wechat.pay.java.service.payments.model.Transaction;
+import io.seata.spring.annotation.GlobalTransactional;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import top.nuanyang26.daijia.common.constant.MqConst;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.common.service.RabbitService;
 import top.nuanyang26.daijia.common.util.RequestUtils;
@@ -17,19 +30,6 @@ import top.nuanyang26.daijia.order.client.OrderInfoFeignClient;
 import top.nuanyang26.daijia.payment.config.WxPayV3Properties;
 import top.nuanyang26.daijia.payment.mapper.PaymentInfoMapper;
 import top.nuanyang26.daijia.payment.service.WxPayService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.wechat.pay.java.core.RSAAutoCertificateConfig;
-import com.wechat.pay.java.core.notification.NotificationParser;
-import com.wechat.pay.java.core.notification.RequestParam;
-import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
-import com.wechat.pay.java.service.payments.jsapi.model.*;
-import com.wechat.pay.java.service.payments.model.Transaction;
-import io.seata.spring.annotation.GlobalTransactional;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
@@ -112,7 +112,7 @@ public class WxPayServiceImpl implements WxPayService {
             return wxPrepayVo;
         }catch (Exception e) {
             e.printStackTrace();
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
     }
 

@@ -11,7 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.customer.mapper.CustomerInfoMapper;
 import top.nuanyang26.daijia.customer.mapper.CustomerLoginLogMapper;
@@ -112,7 +112,7 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
 
             return true;
         } catch (WxErrorException e) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
     }
 

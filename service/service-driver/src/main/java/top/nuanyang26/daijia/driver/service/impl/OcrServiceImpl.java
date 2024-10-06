@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.driver.config.TencentCloudProperties;
 import top.nuanyang26.daijia.driver.service.CosService;
@@ -88,7 +88,7 @@ public class OcrServiceImpl implements OcrService {
             return idCardOcrVo;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
     }
 
@@ -145,7 +145,7 @@ public class OcrServiceImpl implements OcrService {
             return driverLicenseOcrVo;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
     }
 }

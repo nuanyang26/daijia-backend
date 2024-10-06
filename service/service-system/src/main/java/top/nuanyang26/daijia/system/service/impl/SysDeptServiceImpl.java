@@ -1,15 +1,15 @@
 package top.nuanyang26.daijia.system.service.impl;
 
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.model.entity.system.SysDept;
 import top.nuanyang26.daijia.system.helper.DeptHelper;
 import top.nuanyang26.daijia.system.mapper.SysDeptMapper;
 import top.nuanyang26.daijia.system.service.SysDeptService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.annotation.Resource;
-import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.List;
@@ -47,7 +47,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     public boolean removeById(Serializable id) {
         long count = this.count(new LambdaQueryWrapper<SysDept>().eq(SysDept::getParentId, id));
         if(count > 0) {
-            throw new GuiguException(ResultCodeEnum.NODE_ERROR);
+            throw new TonyException(ResultCodeEnum.NODE_ERROR);
         }
         sysDeptMapper.deleteById(id);
         return false;

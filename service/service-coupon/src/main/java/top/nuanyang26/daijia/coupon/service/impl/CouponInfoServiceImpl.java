@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import top.nuanyang26.daijia.common.constant.RedisConstant;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.coupon.mapper.CouponInfoMapper;
 import top.nuanyang26.daijia.coupon.mapper.CustomerCouponMapper;
@@ -69,18 +69,18 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         //判断如果优惠卷不存在
         CouponInfo couponInfo = couponInfoMapper.selectById(couponId);
         if(couponInfo == null) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
 
         //2 判断优惠卷是否过期
         if(couponInfo.getExpireTime().before(new Date())) {
-            throw new GuiguException(ResultCodeEnum.COUPON_EXPIRE);
+            throw new TonyException(ResultCodeEnum.COUPON_EXPIRE);
         }
 
         //3 检查库存，发行数量 和 领取数量
         if(couponInfo.getPublishCount() != 0 &&
                 couponInfo.getReceiveCount() == couponInfo.getPublishCount()) {
-            throw new GuiguException(ResultCodeEnum.COUPON_LESS);
+            throw new TonyException(ResultCodeEnum.COUPON_LESS);
         }
         RLock lock = null;
         try {
@@ -97,7 +97,7 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
                     Long count = customerCouponMapper.selectCount(wrapper);
                     //判断
                     if(count >= couponInfo.getPerLimit()) {
-                        throw new GuiguException(ResultCodeEnum.COUPON_USER_LIMIT);
+                        throw new TonyException(ResultCodeEnum.COUPON_USER_LIMIT);
                     }
                 }
 
@@ -198,18 +198,18 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         CustomerCoupon customerCoupon =
                 customerCouponMapper.selectById(useCouponForm.getCustomerCouponId());
         if(customerCoupon == null) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
         //2 根据优惠卷id获取优惠卷信息
         CouponInfo couponInfo =
                 couponInfoMapper.selectById(customerCoupon.getCouponId());
         if(couponInfo == null) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
 
         //3 判断优惠卷是否是当前乘客所持有的
         if(customerCoupon.getCustomerId() != useCouponForm.getCustomerId()) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
 
         //4 判断是否具备优惠卷使用条件

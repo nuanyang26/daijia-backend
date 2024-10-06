@@ -1,6 +1,10 @@
 package top.nuanyang26.daijia.customer.service.impl;
 
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.Result;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.coupon.client.CouponFeignClient;
@@ -36,10 +40,6 @@ import top.nuanyang26.daijia.model.vo.payment.WxPrepayVo;
 import top.nuanyang26.daijia.model.vo.rules.FeeRuleResponseVo;
 import top.nuanyang26.daijia.order.client.OrderInfoFeignClient;
 import top.nuanyang26.daijia.rules.client.FeeRuleFeignClient;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -156,7 +156,7 @@ public class OrderServiceImpl implements OrderService {
         OrderInfo orderInfo = orderInfoFeignClient.getOrderInfo(orderId).getData();
         //判断
         if (orderInfo.getCustomerId() != customerId) {
-            throw new GuiguException(ResultCodeEnum.ILLEGAL_REQUEST);
+            throw new TonyException(ResultCodeEnum.ILLEGAL_REQUEST);
         }
 
         //获取司机信息
@@ -185,7 +185,7 @@ public class OrderServiceImpl implements OrderService {
         //根据订单id获取订单信息
         OrderInfo orderInfo = orderInfoFeignClient.getOrderInfo(orderId).getData();
         if (orderInfo.getCustomerId() != customerId) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
 
         return driverInfoFeignClient.getDriverInfo(orderInfo.getDriverId()).getData();
@@ -218,7 +218,7 @@ public class OrderServiceImpl implements OrderService {
                 createWxPaymentForm.getCustomerId()).getData();
         //判断
         if (orderPayVo.getStatus() != OrderStatus.UNPAID.getStatus()) {
-            throw new GuiguException(ResultCodeEnum.ILLEGAL_REQUEST);
+            throw new TonyException(ResultCodeEnum.ILLEGAL_REQUEST);
         }
 
         //获取乘客和司机openid

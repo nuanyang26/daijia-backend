@@ -9,7 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.Result;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 
@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(GuiguException.class)
+    @ExceptionHandler(TonyException.class)
     @ResponseBody
-    public Result error(GuiguException e){
+    public Result error(TonyException e){
         e.printStackTrace();
         return Result.build(null,e.getCode(), e.getMessage());
     }

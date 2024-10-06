@@ -24,7 +24,7 @@ public class FileController {
 
     //文件上传接口
 //    @Operation(summary = "上传")
-//    //@GuiguLogin
+//    //@TonyLogin
 //    @PostMapping("/upload")
 //    public Result<String> upload(@RequestPart("file") MultipartFile file,
 //                   @RequestParam(name = "path",defaultValue = "auth") String path) {

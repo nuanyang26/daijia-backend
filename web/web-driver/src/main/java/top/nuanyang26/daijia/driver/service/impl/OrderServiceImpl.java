@@ -1,7 +1,13 @@
 package top.nuanyang26.daijia.driver.service.impl;
 
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import top.nuanyang26.daijia.common.constant.SystemConstant;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.common.util.LocationUtil;
 import top.nuanyang26.daijia.dispatch.client.NewOrderFeignClient;
@@ -23,7 +29,6 @@ import top.nuanyang26.daijia.model.vo.map.DrivingLineVo;
 import top.nuanyang26.daijia.model.vo.map.OrderLocationVo;
 import top.nuanyang26.daijia.model.vo.map.OrderServiceLastLocationVo;
 import top.nuanyang26.daijia.model.vo.order.*;
-import top.nuanyang26.daijia.model.vo.order.*;
 import top.nuanyang26.daijia.model.vo.rules.FeeRuleResponseVo;
 import top.nuanyang26.daijia.model.vo.rules.ProfitsharingRuleResponseVo;
 import top.nuanyang26.daijia.model.vo.rules.RewardRuleResponseVo;
@@ -31,12 +36,6 @@ import top.nuanyang26.daijia.order.client.OrderInfoFeignClient;
 import top.nuanyang26.daijia.rules.client.FeeRuleFeignClient;
 import top.nuanyang26.daijia.rules.client.ProfitsharingRuleFeignClient;
 import top.nuanyang26.daijia.rules.client.RewardRuleFeignClient;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -78,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
         //1 根据orderId获取订单信息，判断当前订单是否司机接单
         OrderInfo orderInfo = orderInfoFeignClient.getOrderInfo(orderFeeForm.getOrderId()).getData();
         if(orderInfo.getDriverId() != orderFeeForm.getDriverId()) {
-            throw new GuiguException(ResultCodeEnum.ILLEGAL_REQUEST);
+            throw new TonyException(ResultCodeEnum.ILLEGAL_REQUEST);
         }
 
         //防止刷
@@ -90,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
                 orderServiceLastLocationVo.getLatitude().doubleValue(),
                 orderServiceLastLocationVo.getLongitude().doubleValue());
 //        if(distance > SystemConstant.DRIVER_END_LOCATION_DISTION) {
-//            throw new GuiguException(ResultCodeEnum.DRIVER_END_LOCATION_DISTION_ERROR);
+//            throw new TonyException(ResultCodeEnum.DRIVER_END_LOCATION_DISTION_ERROR);
 //        }
 
 
@@ -172,7 +171,7 @@ public class OrderServiceImpl implements OrderService {
         CompletableFuture<OrderInfo> orderInfoCompletableFuture = CompletableFuture.supplyAsync(() -> {
             OrderInfo orderInfo = orderInfoFeignClient.getOrderInfo(orderFeeForm.getOrderId()).getData();
             if (orderInfo.getDriverId() != orderFeeForm.getDriverId()) {
-                throw new GuiguException(ResultCodeEnum.ILLEGAL_REQUEST);
+                throw new TonyException(ResultCodeEnum.ILLEGAL_REQUEST);
             }
             return orderInfo;
         });
@@ -198,7 +197,7 @@ public class OrderServiceImpl implements OrderService {
                 orderServiceLastLocationVo.getLatitude().doubleValue(),
                 orderServiceLastLocationVo.getLongitude().doubleValue());
         if(distance > SystemConstant.DRIVER_END_LOCATION_DISTION) {
-            throw new GuiguException(ResultCodeEnum.DRIVER_END_LOCATION_DISTION_ERROR);
+            throw new TonyException(ResultCodeEnum.DRIVER_END_LOCATION_DISTION_ERROR);
         }
 
         //2 计算订单实际里程
@@ -336,7 +335,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderInfoVo getOrderInfo(Long orderId, Long driverId) {
         OrderInfo orderInfo = orderInfoFeignClient.getOrderInfo(orderId).getData();
         if(orderInfo.getDriverId() != driverId) {
-            throw new GuiguException(ResultCodeEnum.ILLEGAL_REQUEST);
+            throw new TonyException(ResultCodeEnum.ILLEGAL_REQUEST);
         }
 
         //获取账单和分账数据，封装到vo里面
@@ -381,7 +380,7 @@ public class OrderServiceImpl implements OrderService {
                 orderLocationVo.getLatitude().doubleValue(),
                 orderLocationVo.getLongitude().doubleValue());
         if(distance > SystemConstant.DRIVER_START_LOCATION_DISTION) {
-            throw new GuiguException(ResultCodeEnum.DRIVER_START_LOCATION_DISTION_ERROR);
+            throw new TonyException(ResultCodeEnum.DRIVER_START_LOCATION_DISTION_ERROR);
         }
 
         return orderInfoFeignClient.driverArriveStartLocation(orderId,driverId).getData();

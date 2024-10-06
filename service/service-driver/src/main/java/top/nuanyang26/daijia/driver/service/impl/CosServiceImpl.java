@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.driver.config.TencentCloudProperties;
 import top.nuanyang26.daijia.driver.service.CiService;
@@ -73,7 +73,7 @@ public class CosServiceImpl implements CosService {
         if(!imageAuditing) {
             //删除违规图片
             cosClient.deleteObject(tencentCloudProperties.getBucketPrivate(),uploadPath);
-            throw new GuiguException(ResultCodeEnum.IMAGE_AUDITION_FAIL);
+            throw new TonyException(ResultCodeEnum.IMAGE_AUDITION_FAIL);
         }
 
         //返回vo对象

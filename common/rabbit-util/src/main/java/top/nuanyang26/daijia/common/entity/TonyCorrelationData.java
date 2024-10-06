@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 
 @Data
-public class GuiguCorrelationData extends CorrelationData {
+public class TonyCorrelationData extends CorrelationData {
 
     //消息体
     private Object message;

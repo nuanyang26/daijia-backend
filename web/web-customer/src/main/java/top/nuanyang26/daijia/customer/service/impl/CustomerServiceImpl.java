@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import top.nuanyang26.daijia.common.constant.RedisConstant;
-import top.nuanyang26.daijia.common.execption.GuiguException;
+import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.Result;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.customer.client.CustomerInfoFeignClient;
@@ -40,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
         //2 判断如果返回失败了，返回错误提示
         Integer codeResult = loginResult.getCode();
         if(codeResult != 200) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
 
         //3 获取远程调用返回用户id
@@ -48,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         //4 判断返回用户id是否为空，如果为空，返回错误提示
         if(customerId == null) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
 
         //5 生成token字符串
@@ -75,10 +75,10 @@ public class CustomerServiceImpl implements CustomerService {
                         .get(RedisConstant.USER_LOGIN_KEY_PREFIX + token);
 
         if(StringUtils.isEmpty(customerId)) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
 //        if(!StringUtils.hasText(customerId)) {
-//            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+//            throw new TonyException(ResultCodeEnum.DATA_ERROR);
 //        }
 
         //4 根据用户id进行远程调用 得到用户信息
@@ -87,12 +87,12 @@ public class CustomerServiceImpl implements CustomerService {
 
         Integer code = customerLoginVoResult.getCode();
         if(code != 200) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
 
         CustomerLoginVo customerLoginVo = customerLoginVoResult.getData();
         if(customerLoginVo == null) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
         //5 返回用户信息
         return customerLoginVo;
@@ -108,12 +108,12 @@ public class CustomerServiceImpl implements CustomerService {
 
         Integer code = customerLoginVoResult.getCode();
         if(code != 200) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
 
         CustomerLoginVo customerLoginVo = customerLoginVoResult.getData();
         if(customerLoginVo == null) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new TonyException(ResultCodeEnum.DATA_ERROR);
         }
         //5 返回用户信息
         return customerLoginVo;

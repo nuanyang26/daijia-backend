@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import top.nuanyang26.daijia.common.login.GuiguLogin;
+import top.nuanyang26.daijia.common.login.TonyLogin;
 import top.nuanyang26.daijia.common.result.Result;
 import top.nuanyang26.daijia.common.util.AuthContextHolder;
 import top.nuanyang26.daijia.driver.client.DriverInfoFeignClient;
@@ -35,7 +35,7 @@ public class DriverController {
     }
 
     @Operation(summary = "获取司机登录信息")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("/getDriverLoginInfo")
     public Result<DriverLoginVo> getDriverLoginInfo() {
         //1 获取用户id
@@ -47,7 +47,7 @@ public class DriverController {
     }
 
     @Operation(summary = "获取司机认证信息")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("/getDriverAuthInfo")
     public Result<DriverAuthInfoVo> getDriverAuthInfo() {
         //获取登录用户id，当前是司机id
@@ -56,7 +56,7 @@ public class DriverController {
     }
 
     @Operation(summary = "更新司机认证信息")
-    @GuiguLogin
+    @TonyLogin
     @PostMapping("/updateDriverAuthInfo")
     public Result<Boolean> updateDriverAuthInfo(@RequestBody UpdateDriverAuthInfoForm updateDriverAuthInfoForm) {
         updateDriverAuthInfoForm.setDriverId(AuthContextHolder.getUserId());
@@ -64,7 +64,7 @@ public class DriverController {
     }
 
     @Operation(summary = "创建司机人脸模型")
-    @GuiguLogin
+    @TonyLogin
     @PostMapping("/creatDriverFaceModel")
     public Result<Boolean> creatDriverFaceModel(@RequestBody DriverFaceModelForm driverFaceModelForm) {
         driverFaceModelForm.setDriverId(AuthContextHolder.getUserId());
@@ -72,7 +72,7 @@ public class DriverController {
     }
 
     @Operation(summary = "判断司机当日是否进行过人脸识别")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("/isFaceRecognition")
     Result<Boolean> isFaceRecognition() {
         Long driverId = AuthContextHolder.getUserId();
@@ -80,7 +80,7 @@ public class DriverController {
     }
 
     @Operation(summary = "验证司机人脸")
-    @GuiguLogin
+    @TonyLogin
     @PostMapping("/verifyDriverFace")
     public Result<Boolean> verifyDriverFace(@RequestBody DriverFaceModelForm driverFaceModelForm) {
         driverFaceModelForm.setDriverId(AuthContextHolder.getUserId());
@@ -88,7 +88,7 @@ public class DriverController {
     }
 
     @Operation(summary = "开始接单服务")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("/startService")
     public Result<Boolean> startService() {
         Long driverId = AuthContextHolder.getUserId();
@@ -96,7 +96,7 @@ public class DriverController {
     }
 
     @Operation(summary = "停止接单服务")
-    @GuiguLogin
+    @TonyLogin
     @GetMapping("/stopService")
     public Result<Boolean> stopService() {
         Long driverId = AuthContextHolder.getUserId();
