@@ -1,6 +1,13 @@
 package top.nuanyang26.daijia.order.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import top.nuanyang26.daijia.common.result.Result;
+import top.nuanyang26.daijia.common.util.AuthContextHolder;
 import top.nuanyang26.daijia.model.entity.order.OrderInfo;
 import top.nuanyang26.daijia.model.form.order.OrderInfoForm;
 import top.nuanyang26.daijia.model.form.order.StartDriveForm;
@@ -8,14 +15,7 @@ import top.nuanyang26.daijia.model.form.order.UpdateOrderBillForm;
 import top.nuanyang26.daijia.model.form.order.UpdateOrderCartForm;
 import top.nuanyang26.daijia.model.vo.base.PageVo;
 import top.nuanyang26.daijia.model.vo.order.*;
-import top.nuanyang26.daijia.model.vo.order.*;
 import top.nuanyang26.daijia.order.service.OrderInfoService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -87,7 +87,8 @@ public class OrderInfoController {
     @Operation(summary = "根据时间段获取订单数")
     @GetMapping("/getOrderNumByTime/{startTime}/{endTime}")
     public Result<Long> getOrderNumByTime(@PathVariable String startTime, @PathVariable String endTime) {
-        return Result.ok(orderInfoService.getOrderNumByTime(startTime, endTime));
+        Long driverId = AuthContextHolder.getUserId();
+        return Result.ok(orderInfoService.getOrderNumByTime(driverId, startTime, endTime));
     }
 
     @Operation(summary = "结束代驾服务更新订单账单")

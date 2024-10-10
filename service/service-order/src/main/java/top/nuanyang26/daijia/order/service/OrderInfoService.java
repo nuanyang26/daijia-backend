@@ -1,14 +1,13 @@
 package top.nuanyang26.daijia.order.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import top.nuanyang26.daijia.model.entity.order.OrderInfo;
 import top.nuanyang26.daijia.model.form.order.OrderInfoForm;
 import top.nuanyang26.daijia.model.form.order.StartDriveForm;
 import top.nuanyang26.daijia.model.form.order.UpdateOrderBillForm;
 import top.nuanyang26.daijia.model.form.order.UpdateOrderCartForm;
 import top.nuanyang26.daijia.model.vo.base.PageVo;
-import top.nuanyang26.daijia.model.vo.order.*;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import top.nuanyang26.daijia.model.vo.order.*;
 
 import java.math.BigDecimal;
@@ -35,7 +34,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
 
     Boolean startDriver(StartDriveForm startDriveForm);
 
-    Long getOrderNumByTime(String startTime, String endTime);
+    Long getOrderNumByTime(Long driverId, String startTime, String endTime);
 
     Boolean endDrive(UpdateOrderBillForm updateOrderBillForm);
 

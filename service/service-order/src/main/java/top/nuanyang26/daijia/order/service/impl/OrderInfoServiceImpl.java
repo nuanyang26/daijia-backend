@@ -307,10 +307,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     @Override
-    public Long getOrderNumByTime(String startTime, String endTime) {
+    public Long getOrderNumByTime(Long driverId, String startTime, String endTime) {
        // 09 <= time < 10   <= time1  <    11
         LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<>();
-        // TODO 查询该司机的订单，而不是查所有
+        wrapper.eq(OrderInfo::getDriverId, driverId);
         wrapper.ge(OrderInfo::getStartServiceTime,startTime);
         wrapper.lt(OrderInfo::getStartServiceTime,endTime);
         Long count = orderInfoMapper.selectCount(wrapper);
