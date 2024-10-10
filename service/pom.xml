@@ -17,11 +17,9 @@
         <module>service-coupon</module>
         <module>service-rules</module>
         <module>service-dispatch</module>
-        <module>service-mq</module>
         <module>service-order</module>
         <module>service-payment</module>
         <module>service-customer</module>
-        <module>service-system</module>
     </modules>
 
     <dependencies>
@@ -30,17 +28,7 @@
             <artifactId>service-util</artifactId>
             <version>1.0</version>
         </dependency>
-        <dependency>
-            <groupId>top.nuanyang26.daijia</groupId>
-            <artifactId>common-log</artifactId>
-            <version>1.0</version>
-        </dependency>
 
-        <dependency>
-            <groupId>top.nuanyang26.daijia</groupId>
-            <artifactId>service-system-client</artifactId>
-            <version>1.0</version>
-        </dependency>
         <dependency>
             <groupId>top.nuanyang26.daijia</groupId>
             <artifactId>service-coupon-client</artifactId>

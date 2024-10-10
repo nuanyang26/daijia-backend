@@ -12,7 +12,6 @@
 	<modules>
 		<module>web-customer</module>
 		<module>web-driver</module>
-		<module>web-mgr</module>
 	</modules>
 
 	<artifactId>web</artifactId>
@@ -23,16 +22,6 @@
 		<dependency>
 			<groupId>top.nuanyang26.daijia</groupId>
 			<artifactId>service-util</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>top.nuanyang26.daijia</groupId>
-			<artifactId>common-log</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>top.nuanyang26.daijia</groupId>
-			<artifactId>service-system-client</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
