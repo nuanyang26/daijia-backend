@@ -9,10 +9,10 @@ global top.nuanyang26.daijia.model.vo.rules.FeeRuleResponse feeRuleResponse;
 
 /**
 1.起步价
-    00:00:00-06:59:59  19元(含3公里)
-    07:00:00-23:59:59  19元(含5公里)
+    00:00:00-06:59:59  30元(含3公里)
+    07:00:00-23:59:59  10元(含5公里)
 */
-rule "起步价 00:00:00-07:00:00  19元(含3公里)"
+rule "起步价 00:00:00-07:00:00  30元(含3公里)"
     salience 10          //指定优先级，数值越大优先级越高，不指定的情况下由上到下执行
     no-loop true         //防止陷入死循环
     when
@@ -20,15 +20,15 @@ rule "起步价 00:00:00-07:00:00  19元(含3公里)"
     then
         //基础里程 3公里
         feeRuleResponse.setBaseDistance(new BigDecimal("3.0"));
-        //收费19元 础里程费
-        feeRuleResponse.setBaseDistanceFee(new BigDecimal("19.0"));
-        //超出里程  超出基础里程的里程
+        //收费10元 基础里程费
+        feeRuleResponse.setBaseDistanceFee(new BigDecimal("30.0"));
+        //超出里程  超出基础里程的费用
         feeRuleResponse.setExceedDistance(new BigDecimal("0.0"));
-        feeRuleResponse.setExceedDistancePrice(new BigDecimal("4.0"));
+        feeRuleResponse.setExceedDistancePrice(new BigDecimal("1.0"));
         System.out.println("00:00:00-07:00:00 " + feeRuleResponse.getBaseDistance() + "公里，起步价:" + feeRuleResponse.getBaseDistanceFee() + "元");
 end
 
-rule "起步价 07:00:00-23:59:59  19元(含5公里)"
+rule "起步价 07:00:00-23:59:59  10元(含5公里)"
     salience 10          //指定优先级，数值越大优先级越高，不指定的情况下由上到下执行
     no-loop true         //防止陷入死循环
     when
@@ -38,21 +38,21 @@ rule "起步价 07:00:00-23:59:59  19元(含5公里)"
         $rule:FeeRuleRequest(startTime >= "07:00:00" && startTime <= "23:59:59")
     then
         feeRuleResponse.setBaseDistance(new BigDecimal("5.0"));
-        feeRuleResponse.setBaseDistanceFee(new BigDecimal("19.0"));
+        feeRuleResponse.setBaseDistanceFee(new BigDecimal("10.0"));
 
         //5公里内里程费为0
         feeRuleResponse.setExceedDistance(new BigDecimal("0.0"));
-        feeRuleResponse.setExceedDistancePrice(new BigDecimal("3.0"));
+        feeRuleResponse.setExceedDistancePrice(new BigDecimal("1.0"));
         System.out.println("07:00:00-23:59:59 " + feeRuleResponse.getBaseDistance() + "公里，起步价:" + feeRuleResponse.getBaseDistanceFee() + "元");
 end
 
 /**
 2.里程费
     超出起步里程后开始计算
-    00:00:00-06:59:59   4元/1公里
-    07:00:00-23:59:59   3元/1公里
+    00:00:00-06:59:59   1元/1公里
+    07:00:00-23:59:59   1元/1公里
 */
-rule "里程费 00:00:00-06:59:59 4元/1公里"
+rule "里程费 00:00:00-06:59:59 1元/1公里"
     salience 10          //指定优先级，数值越大优先级越高，不指定的情况下由上到下执行
     no-loop true         //防止陷入死循环
     when
@@ -65,10 +65,10 @@ rule "里程费 00:00:00-06:59:59 4元/1公里"
     then
         BigDecimal exceedDistance = $rule.getDistance().subtract(new BigDecimal("3.0"));
         feeRuleResponse.setExceedDistance(exceedDistance);
-        feeRuleResponse.setExceedDistancePrice(new BigDecimal("4.0"));
-        System.out.println("里程费，超出里程:" + feeRuleResponse.getExceedDistance() + "公里，单价：" + feeRuleResponse.getExceedDistancePrice());
+        feeRuleResponse.setExceedDistancePrice(new BigDecimal("1.0"));
+        System.out.println("里程费：超出里程:" + feeRuleResponse.getExceedDistance() + "公里，单价：" + feeRuleResponse.getExceedDistancePrice());
 end
-rule "里程费 07:00:00-23:59:59 3元/1公里"
+rule "里程费 07:00:00-23:59:59 1元/1公里"
     salience 10          //指定优先级，数值越大优先级越高，不指定的情况下由上到下执行
     no-loop true         //防止陷入死循环
     when
@@ -81,8 +81,8 @@ rule "里程费 07:00:00-23:59:59 3元/1公里"
     then
         BigDecimal exceedDistance = $rule.getDistance().subtract(new BigDecimal("5.0"));
         feeRuleResponse.setExceedDistance(exceedDistance);
-        feeRuleResponse.setExceedDistancePrice(new BigDecimal("3.0"));
-        System.out.println("里程费，超出里程:" + feeRuleResponse.getExceedDistance() + "公里，单价：" + feeRuleResponse.getExceedDistancePrice());
+        feeRuleResponse.setExceedDistancePrice(new BigDecimal("1.0"));
+        System.out.println("里程费：超出里程:" + feeRuleResponse.getExceedDistance() + "公里，单价：" + feeRuleResponse.getExceedDistancePrice());
 end
 
 /**
@@ -102,7 +102,7 @@ rule "等候费 等候10分钟后 1元/1分钟"
         feeRuleResponse.setBaseWaitMinute(10);
         feeRuleResponse.setExceedWaitMinute(exceedWaitMinute);
         feeRuleResponse.setExceedWaitMinutePrice(new BigDecimal("1.0"));
-        System.out.println("等候费，超出分钟:" + feeRuleResponse.getExceedWaitMinute() + "分钟，单价：" + feeRuleResponse.getExceedWaitMinutePrice());
+        System.out.println("等候费：超出分钟:" + feeRuleResponse.getExceedWaitMinute() + "分钟，单价：" + feeRuleResponse.getExceedWaitMinutePrice());
 end
 rule "无等候费"
     salience 10          //指定优先级，数值越大优先级越高，不指定的情况下由上到下执行
@@ -136,7 +136,7 @@ rule "远途费 订单行程超出12公里后每公里1元"
         feeRuleResponse.setBaseLongDistance(new BigDecimal("12.0"));
         feeRuleResponse.setExceedLongDistance(exceedLongDistance);
         feeRuleResponse.setExceedLongDistancePrice(new BigDecimal("1.0"));
-        System.out.println("远途费，超出公里:" + feeRuleResponse.getExceedLongDistance() + "公里，单价：" + feeRuleResponse.getExceedLongDistancePrice());
+        System.out.println("远途费：超出公里:" + feeRuleResponse.getExceedLongDistance() + "公里，单价：" + feeRuleResponse.getExceedLongDistancePrice());
 end
 rule "无远途费"
     salience 10          //指定优先级，数值越大优先级越高，不指定的情况下由上到下执行

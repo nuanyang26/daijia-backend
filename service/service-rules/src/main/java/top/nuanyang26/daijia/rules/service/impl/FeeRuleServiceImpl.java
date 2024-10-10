@@ -2,16 +2,15 @@ package top.nuanyang26.daijia.rules.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.nuanyang26.daijia.model.form.rules.FeeRuleRequest;
 import top.nuanyang26.daijia.model.form.rules.FeeRuleRequestForm;
 import top.nuanyang26.daijia.model.vo.rules.FeeRuleResponse;
 import top.nuanyang26.daijia.model.vo.rules.FeeRuleResponseVo;
 import top.nuanyang26.daijia.rules.service.FeeRuleService;
+import top.nuanyang26.daijia.rules.utils.DroolsHelper;
 
 import java.util.Date;
 
@@ -20,8 +19,7 @@ import java.util.Date;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class FeeRuleServiceImpl implements FeeRuleService {
 
-    @Autowired
-    private KieContainer kieContainer;
+    private static final String RULES_CUSTOMER_RULES_DRL = "rules/FeeRule.drl";
 
     //计算订单费用
     @Override
@@ -35,7 +33,7 @@ public class FeeRuleServiceImpl implements FeeRuleService {
         feeRuleRequest.setWaitMinute(calculateOrderFeeForm.getWaitMinute());
 
         //Drools使用
-        KieSession kieSession = kieContainer.newKieSession();
+        KieSession kieSession = DroolsHelper.loadForRule(RULES_CUSTOMER_RULES_DRL);
 
         //封装返回对象
         FeeRuleResponse feeRuleResponse = new FeeRuleResponse();

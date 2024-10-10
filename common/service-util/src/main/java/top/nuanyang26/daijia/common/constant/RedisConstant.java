@@ -30,7 +30,7 @@ public class RedisConstant {
     public static final long ORDER_ACCEPT_MARK_EXPIRES_TIME = 15;
 
     //抢新订单锁
-    public static final String ROB_NEW_ORDER_LOCK = "rob:new:order:lock";
+    public static final String ROB_NEW_ORDER_LOCK = "rob:new:order:lock:";
     //等待获取锁的时间
     public static final long ROB_NEW_ORDER_LOCK_WAIT_TIME = 1;
     //加锁的时间
@@ -38,6 +38,7 @@ public class RedisConstant {
 
     //订单超时取消，延迟队列
     public static final String QUEUE_ORDER_CANCEL = "queue_order_cancel";
+    public static final long QUEUE_ORDER_CANCEL_TIME = 15;
 
     //优惠券信息
     public static final String COUPON_INFO = "coupon:info:";

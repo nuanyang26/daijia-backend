@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import top.nuanyang26.daijia.common.constant.RedisConstant;
+import top.nuanyang26.daijia.common.constant.SystemConstant;
 import top.nuanyang26.daijia.common.execption.TonyException;
 import top.nuanyang26.daijia.common.result.ResultCodeEnum;
 import top.nuanyang26.daijia.coupon.mapper.CouponInfoMapper;
@@ -62,6 +63,7 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         return new PageVo(pageInfo.getRecords(), pageInfo.getPages(), pageInfo.getTotal());
     }
 
+    //  TODO  是否需要加事务
     //领取优惠卷
     @Override
     public Boolean receive(Long customerId, Long couponId) {
@@ -257,6 +259,7 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
             CustomerCoupon updateCustomerCoupon = new CustomerCoupon();
             updateCustomerCoupon.setId(customerCoupon.getId());
             updateCustomerCoupon.setUsedTime(new Date());
+            updateCustomerCoupon.setStatus(SystemConstant.COUPON_STATUS_USED);
             updateCustomerCoupon.setOrderId(useCouponForm.getOrderId());
             customerCouponMapper.updateById(updateCustomerCoupon);
 

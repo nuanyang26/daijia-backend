@@ -96,7 +96,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
             //3 发送消息到延迟队列里面
             //设置过期时间
-            delayedQueue.offer(orderId.toString(),15,TimeUnit.MINUTES);
+            delayedQueue.offer(orderId.toString(), RedisConstant.QUEUE_ORDER_CANCEL_TIME, TimeUnit.MINUTES);
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -477,7 +477,17 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         //判断订单是否存在，通过Redis，减少数据库压力
         if (!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
             //抢锁失败
-            throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+            //当前订单都已经不在redis里面了，说明已经被接单或者其他情况？
+            OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+            if (orderInfo.getStatus() == OrderStatus.WAITING_ACCEPT.getStatus()) {
+                //修改订单状态：取消状态
+                orderInfo.setStatus(OrderStatus.CANCEL_ORDER.getStatus());
+                int rows = orderInfoMapper.updateById(orderInfo);
+                if (rows != 1) {
+                    throw new TonyException(ResultCodeEnum.CANCEL_ORDER_FAIL);
+                }
+            }
+            return;
         }
         //创建锁
         RLock lock = redissonClient.getLock(RedisConstant.ROB_NEW_ORDER_LOCK + orderId);
@@ -487,7 +497,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             if (flag) {
                 if (!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
                     //抢锁失败
-                    throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+                    throw new TonyException(ResultCodeEnum.CANCEL_ORDER_FAIL);
                 }
                 //抢锁成功
                 OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
@@ -505,7 +515,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             }
         } catch (Exception e) {
             //抢锁失败
-            throw new TonyException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+            throw new TonyException(ResultCodeEnum.CANCEL_ORDER_FAIL);
         } finally {
             //释放
             if (lock.isLocked()) {
