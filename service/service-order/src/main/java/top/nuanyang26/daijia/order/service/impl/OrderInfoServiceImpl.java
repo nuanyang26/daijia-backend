@@ -89,10 +89,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private void sendDelayMessage(Long orderId) {
         try{
             //1 创建队列
-            RBlockingQueue<Object> blockingDueue = redissonClient.getBlockingQueue(RedisConstant.QUEUE_ORDER_CANCEL);
+            RBlockingQueue<Object> blockingQueue = redissonClient.getBlockingQueue(RedisConstant.QUEUE_ORDER_CANCEL);
 
             //2 把创建队列放到延迟队列里面
-            RDelayedQueue<Object> delayedQueue = redissonClient.getDelayedQueue(blockingDueue);
+            RDelayedQueue<Object> delayedQueue = redissonClient.getDelayedQueue(blockingQueue);
 
             //3 发送消息到延迟队列里面
             //设置过期时间
@@ -119,6 +119,25 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
 
         return orderInfo.getStatus();
+    }
+
+    @Override
+    public Boolean customerCancelNoAcceptOrder(Long customerId, Long orderId) {
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        if (orderInfo.getCustomerId() != customerId) {
+            throw new TonyException(ResultCodeEnum.ILLEGAL_REQUEST);
+        }
+        if (orderInfo.getStatus() == OrderStatus.WAITING_ACCEPT.getStatus()) {
+            //修改订单状态：取消状态
+            orderInfo.setStatus(OrderStatus.CUSTOMER_CANCEL.getStatus());
+            int rows = orderInfoMapper.updateById(orderInfo);
+            if (rows != 1) {
+                throw new TonyException(ResultCodeEnum.CANCEL_ORDER_FAIL);
+            }
+            //删除接单标识
+            redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK + orderId);
+        }
+        return true;
     }
 
     //Redisson分布式锁

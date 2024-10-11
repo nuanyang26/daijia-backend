@@ -98,6 +98,12 @@ public class OrderServiceImpl implements OrderService {
         return expectOrderVo;
     }
 
+    @Override
+    public Boolean customerCancelNoAcceptOrder(Long customerId, Long orderId) {
+        Result<Boolean> booleanResult = orderInfoFeignClient.customerCancelNoAcceptOrder(customerId, orderId);
+        return booleanResult.getData();
+    }
+
     // //乘客下单
     @Override
     public Long submitOrder(SubmitOrderForm submitOrderForm) {

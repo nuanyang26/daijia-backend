@@ -41,6 +41,12 @@ public class OrderInfoController {
         return Result.ok(orderInfoService.getOrderStatus(orderId));
     }
 
+    @Operation(summary = "乘客等待时无责取消订单")
+    @GetMapping("/customerCancelNoAcceptOrder/{customerId}/{orderId}")
+    public Result<Boolean> customerCancelNoAcceptOrder(@PathVariable Long customerId, @PathVariable Long orderId) {
+        return Result.ok(orderInfoService.customerCancelNoAcceptOrder(customerId, orderId));
+    }
+
     @Operation(summary = "司机抢单")
     @GetMapping("/robNewOrder/{driverId}/{orderId}")
     public Result<Boolean> robNewOrder(@PathVariable Long driverId, @PathVariable Long orderId) {

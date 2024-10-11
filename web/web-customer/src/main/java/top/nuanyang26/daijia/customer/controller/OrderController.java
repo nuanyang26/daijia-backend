@@ -94,6 +94,15 @@ public class OrderController {
         return Result.ok(orderService.calculateDrivingLine(calculateDrivingLineForm));
     }
 
+    @Operation(summary = "乘客等待时无责取消订单接口")
+    @TonyLogin
+    @GetMapping("/customerCancelNoAcceptOrder/{orderId}")
+    public Result<Boolean> customerCancelNoAcceptOrder(@PathVariable Long orderId) {
+        Long customerId = AuthContextHolder.getUserId();
+        return Result.ok(orderService.customerCancelNoAcceptOrder(customerId, orderId));
+
+    }
+
     @Operation(summary = "代驾服务：获取订单服务最后一个位置信息")
     @TonyLogin
     @GetMapping("/getOrderServiceLastLocation/{orderId}")

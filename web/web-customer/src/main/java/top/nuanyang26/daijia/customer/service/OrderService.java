@@ -19,6 +19,9 @@ public interface OrderService {
     //预估订单数据
     ExpectOrderVo expectOrder(ExpectOrderForm expectOrderForm);
 
+    //乘客等待时无责取消订单
+    Boolean customerCancelNoAcceptOrder(Long customerId, Long orderId);
+
     //乘客下单
     Long submitOrder(SubmitOrderForm submitOrderForm);
 

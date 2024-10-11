@@ -1,5 +1,10 @@
 package top.nuanyang26.daijia.order.client;
 
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import top.nuanyang26.daijia.common.result.Result;
 import top.nuanyang26.daijia.model.entity.order.OrderInfo;
 import top.nuanyang26.daijia.model.form.order.OrderInfoForm;
@@ -7,11 +12,6 @@ import top.nuanyang26.daijia.model.form.order.StartDriveForm;
 import top.nuanyang26.daijia.model.form.order.UpdateOrderBillForm;
 import top.nuanyang26.daijia.model.form.order.UpdateOrderCartForm;
 import top.nuanyang26.daijia.model.vo.base.PageVo;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import top.nuanyang26.daijia.model.vo.order.*;
 
 import java.math.BigDecimal;
@@ -35,6 +35,16 @@ public interface OrderInfoFeignClient {
      */
     @GetMapping("/order/info/getOrderStatus/{orderId}")
     Result<Integer> getOrderStatus(@PathVariable("orderId") Long orderId);
+
+    /**
+     * 乘客等待时无责取消订单
+     *
+     * @param customerId
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/order/info/customerCancelNoAcceptOrder/{customerId}/{orderId}")
+    Result<Boolean> customerCancelNoAcceptOrder(@PathVariable Long customerId, @PathVariable Long orderId);
 
     /**
      * 司机抢单
