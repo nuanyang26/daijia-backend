@@ -1,0 +1,109 @@
+services:
+  mysql:
+    image: mysql:8.0.30
+    container_name: daijia-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./_env/mysql:/var/lib/mysql
+    networks:
+      - daijia
+
+  rabbitmq:
+    image: rabbitmq:3.12.0-management
+    container_name: daijia-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./_env/rabbitmq-data:/var/lib/rabbitmq # 持久化
+    networks:
+      - daijia
+
+  redis:
+    image: redis:latest
+    container_name: daijia-redis
+    restart: always
+    ports:
+      - "16379:6379"
+    volumes:
+      - ./_env/redis-data:/data  # 将本地目录挂载到 Redis 容器内的 /data 目录
+    command: ["redis-server", "--appendonly", "yes"]  # 启用 AOF 持久化
+    networks:
+      - daijia
+
+  minio:
+    image: minio/minio
+    container_name: daijia-minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./_env/minio/data:/data
+      - ./_env/minio/config:/root/.minio
+    command: server /data --console-address ":9001"
+    networks:
+      - daijia
+
+  mongodb:
+    image: mongo:7.0.0
+    container_name: daijia-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./_env/mongo/data/db:/data/db
+    networks:
+      - daijia
+
+  nacos-server:
+    image: nacos/nacos-server:v2.2.2-slim
+    ports:
+      - "8848:8848"
+    volumes:
+      - ./_env/nacos-data:/home/nacos/data
+    networks:
+      - daijia
+    environment:
+      - MODE=standalone # 单节点模式启动
+      - PREFER_HOST_MODE=hostname # 支持 hostname
+      - TZ=Asia/Shanghai # 控制时区
+
+  seata-server:
+    image: seataio/seata-server:1.6.1
+    hostname: seata-server
+    ports:
+      - "8091:8091"
+      - "7091:7091"
+    environment:
+      - SEATA_PORT=8091
+      - STORE_MODE=file
+    networks:
+      - daijia
+
+  xxl-job-admin:
+    image: openjdk:17
+    container_name: xxl-job-admin
+    working_dir: /app
+    volumes:
+      - ./_env/_xxl-job/:/app  # 将当前目录挂载到容器内 /app 目录
+    command: ["java", "-jar", "xxl-job-admin-2.3.0_docker-compose.jar"]
+    ports:
+      - "18145:18145"  # 根据应用需要映射端口
+    networks:
+      - daijia
+    depends_on:
+      - mysql
+
+networks:
+  daijia:
+    driver: bridge
+

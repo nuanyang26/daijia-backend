@@ -1,0 +1,102 @@
+services:
+#  web s
+  web-customer:
+    build:
+      context: ./web/web-customer
+      dockerfile: Dockerfile
+    container_name: web-customer
+    networks:
+      - daijia
+    ports:
+      - "8601:8601"  # 如果你的应用需要映射这个端口
+  web-driver:
+    build:
+      context: ./web/web-driver
+      dockerfile: Dockerfile
+    container_name: web-driver
+    networks:
+      - daijia
+    ports:
+      - "8602:8602"  # 如果你的应用需要映射这个端口
+# gateway
+  server-gateway:
+    build:
+      context: ./server-gateway
+      dockerfile: Dockerfile
+    container_name: server-gateway
+    networks:
+      - daijia
+    ports:
+      - "8600:8600"  # 如果你的应用需要映射这个端口
+
+#  service s
+  service-coupon:
+    build:
+      context: ./service/service-coupon
+      dockerfile: Dockerfile
+    container_name: service-coupon
+    networks:
+      - daijia
+  service-customer:
+    build:
+      context: ./service/service-customer
+      dockerfile: Dockerfile
+    container_name: service-customer
+    networks:
+      - daijia
+  service-dispatch:
+    build:
+      context: ./service/service-dispatch
+      dockerfile: Dockerfile
+    container_name: service-dispatch
+    networks:
+      - daijia
+  service-driver:
+    build:
+      context: ./service/service-driver
+      dockerfile: Dockerfile
+    container_name: service-driver
+    networks:
+      - daijia
+  service-map:
+    build:
+      context: ./service/service-map
+      dockerfile: Dockerfile
+    container_name: service-map
+    networks:
+      - daijia
+  service-order:
+    build:
+      context: ./service/service-order
+      dockerfile: Dockerfile
+    container_name: service-order
+    networks:
+      - daijia
+  service-payment:
+    build:
+      context: ./service/service-payment
+      dockerfile: Dockerfile
+    container_name: service-payment
+    networks:
+      - daijia
+  service-rules:
+    build:
+      context: ./service/service-rules
+      dockerfile: Dockerfile
+    container_name: service-rules
+    networks:
+      - daijia
+
+#  ubuntu:
+#    image: ubuntu:latest
+#    container_name: daijia-ubuntu
+#    restart: always
+#    networks:
+#      - daijia
+#    command: ["/bin/bash", "-c", "while true; do sleep 30; done"]  # 保持容器运行
+#    stdin_open: true  # 允许交互式输入
+#    tty: true  # 启用伪终端
+
+networks:
+  daijia:
+    driver: bridge  # 使用 bridge 网络驱动
