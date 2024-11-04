@@ -102,6 +102,7 @@ public class WxPayServiceImpl implements WxPayService {
             settleInfo.setProfitSharing(true);
             request.setSettleInfo(settleInfo);
 
+            /* i2 TODO test
             //4 调用微信支付使用对象里面方法实现微信支付调用
             PrepayWithRequestPaymentResponse response = service.prepayWithRequestPayment(request);
 
@@ -109,6 +110,14 @@ public class WxPayServiceImpl implements WxPayService {
             WxPrepayVo wxPrepayVo = new WxPrepayVo();
             BeanUtils.copyProperties(response,wxPrepayVo);
             wxPrepayVo.setTimeStamp(response.getTimeStamp());
+             */
+            WxPrepayVo wxPrepayVo = new WxPrepayVo();
+            wxPrepayVo.setAppId("test_AppID");
+            wxPrepayVo.setTimeStamp(String.valueOf(new Date().getTime()));
+            wxPrepayVo.setNonceStr(String.valueOf(hashCode()));
+            wxPrepayVo.setPackageVal("test_packageVal");
+            wxPrepayVo.setSignType("test_MD5");
+            wxPrepayVo.setPaySign("test_paySign");
             return wxPrepayVo;
         }catch (Exception e) {
             e.printStackTrace();
@@ -128,8 +137,15 @@ public class WxPayServiceImpl implements WxPayService {
         queryRequest.setMchid(wxPayV3Properties.getMerchantId());
         queryRequest.setOutTradeNo(orderNo);
 
+        /*
+        TODO i2 test
         //3 调用微信操作对象里面方法实现查询操作
         Transaction transaction = service.queryOrderByOutTradeNo(queryRequest);
+         */
+        Transaction transaction = new Transaction();
+        transaction.setTradeState(Transaction.TradeStateEnum.SUCCESS);
+        transaction.setOutTradeNo(orderNo);
+        transaction.setTransactionId("test_transactionId" + hashCode());
 
         //4 查询返回结果，根据结果判断
         if(transaction != null

@@ -88,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
                 orderInfo.getEndPointLongitude().doubleValue(),
                 orderServiceLastLocationVo.getLatitude().doubleValue(),
                 orderServiceLastLocationVo.getLongitude().doubleValue());
+//        TODO totest
 //        if(distance > SystemConstant.DRIVER_END_LOCATION_DISTION) {
 //            throw new TonyException(ResultCodeEnum.DRIVER_END_LOCATION_DISTION_ERROR);
 //        }
@@ -110,6 +111,7 @@ public class OrderServiceImpl implements OrderService {
                 Math.abs((int)((orderInfo.getArriveTime().getTime()-orderInfo.getAcceptTime().getTime())/(1000 * 60)));
         feeRuleRequestForm.setWaitMinute(waitMinute);
         //远程调用 代驾费用
+//        TODO 看看这里的Vo 有没有相关信息
         FeeRuleResponseVo feeRuleResponseVo = feeRuleFeignClient.calculateOrderFee(feeRuleRequestForm).getData();
         //实际费用 = 代驾费用 + 其他费用（停车费）
         BigDecimal totalAmount =
