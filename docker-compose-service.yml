@@ -111,4 +111,4 @@ services:
 
 networks:
   daijia:
-    driver: bridge  # 使用 bridge 网络驱动
+    external: true

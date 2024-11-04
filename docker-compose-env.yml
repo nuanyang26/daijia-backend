@@ -107,5 +107,5 @@ services:
 
 networks:
   daijia:
-    driver: bridge
+    external: true
 
