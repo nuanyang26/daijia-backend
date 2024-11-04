@@ -21,7 +21,7 @@ public class SystemConstant {
     public static final int PROFITSHARING_DELAY_TIME = 2*60;
 
     //车辆前后照过期时间，单位：天
-    public static final int CAR_IMG_URL_TIMEOUT = 7;
+    public static final int CAR_IMG_URL_TIMEOUT = 30;
 
     //优惠券 未使用 已使用
     public static final int COUPON_STATUS_UNUSED = 1;

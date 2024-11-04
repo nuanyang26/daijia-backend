@@ -282,7 +282,7 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         customerCoupon.setCustomerId(customerId);
         customerCoupon.setExpireTime(expireTime);
         customerCoupon.setReceiveTime(new Date());
-        customerCoupon.setStatus(1);
+        customerCoupon.setStatus(SystemConstant.COUPON_STATUS_UNUSED);
         customerCouponMapper.insert(customerCoupon);
     }
 }

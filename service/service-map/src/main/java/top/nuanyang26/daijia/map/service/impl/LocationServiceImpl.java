@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -166,7 +167,7 @@ public class LocationServiceImpl implements LocationService {
         orderLocationVo.setLatitude(updateOrderLocationForm.getLatitude());
 
         String key = RedisConstant.UPDATE_ORDER_LOCATION + updateOrderLocationForm.getOrderId();
-        redisTemplate.opsForValue().set(key,orderLocationVo);
+        redisTemplate.opsForValue().set(key, orderLocationVo, RedisConstant.UPDATE_ORDER_LOCATION_EXPIRES_TIME, TimeUnit.MINUTES);
         return true;
     }
 
