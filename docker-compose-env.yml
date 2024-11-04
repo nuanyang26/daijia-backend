@@ -66,6 +66,7 @@ services:
 
   nacos-server:
     image: nacos/nacos-server:v2.2.2-slim
+    restart: always
     ports:
       - "8848:8848"
     volumes:
@@ -79,7 +80,7 @@ services:
 
   seata-server:
     image: seataio/seata-server:1.6.1
-    hostname: seata-server
+    restart: always
     ports:
       - "8091:8091"
       - "7091:7091"
@@ -91,6 +92,7 @@ services:
 
   xxl-job-admin:
     image: openjdk:17
+    restart: always
     container_name: xxl-job-admin
     working_dir: /app
     volumes:

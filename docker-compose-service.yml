@@ -1,25 +1,29 @@
 services:
 #  web s
   web-customer:
+    restart: unless-stopped
     build:
       context: ./web/web-customer
       dockerfile: Dockerfile
     container_name: web-customer
     networks:
       - daijia
-    ports:
-      - "8601:8601"  # 如果你的应用需要映射这个端口
+#    ports:
+#      - "8601:8601"  # 如果你的应用需要映射这个端口
   web-driver:
+    restart: unless-stopped
     build:
       context: ./web/web-driver
       dockerfile: Dockerfile
     container_name: web-driver
     networks:
       - daijia
-    ports:
-      - "8602:8602"  # 如果你的应用需要映射这个端口
+#    ports:
+#      - "8602:8602"  # 如果你的应用需要映射这个端口
+
 # gateway
   server-gateway:
+    restart: unless-stopped
     build:
       context: ./server-gateway
       dockerfile: Dockerfile
@@ -31,6 +35,7 @@ services:
 
 #  service s
   service-coupon:
+    restart: unless-stopped
     build:
       context: ./service/service-coupon
       dockerfile: Dockerfile
@@ -38,6 +43,7 @@ services:
     networks:
       - daijia
   service-customer:
+    restart: unless-stopped
     build:
       context: ./service/service-customer
       dockerfile: Dockerfile
@@ -45,6 +51,7 @@ services:
     networks:
       - daijia
   service-dispatch:
+    restart: unless-stopped
     build:
       context: ./service/service-dispatch
       dockerfile: Dockerfile
@@ -52,6 +59,7 @@ services:
     networks:
       - daijia
   service-driver:
+    restart: unless-stopped
     build:
       context: ./service/service-driver
       dockerfile: Dockerfile
@@ -59,6 +67,7 @@ services:
     networks:
       - daijia
   service-map:
+    restart: unless-stopped
     build:
       context: ./service/service-map
       dockerfile: Dockerfile
@@ -66,6 +75,7 @@ services:
     networks:
       - daijia
   service-order:
+    restart: unless-stopped
     build:
       context: ./service/service-order
       dockerfile: Dockerfile
@@ -73,6 +83,7 @@ services:
     networks:
       - daijia
   service-payment:
+    restart: unless-stopped
     build:
       context: ./service/service-payment
       dockerfile: Dockerfile
@@ -80,6 +91,7 @@ services:
     networks:
       - daijia
   service-rules:
+    restart: unless-stopped
     build:
       context: ./service/service-rules
       dockerfile: Dockerfile
@@ -90,7 +102,7 @@ services:
 #  ubuntu:
 #    image: ubuntu:latest
 #    container_name: daijia-ubuntu
-#    restart: always
+#    restart: unless-stopped
 #    networks:
 #      - daijia
 #    command: ["/bin/bash", "-c", "while true; do sleep 30; done"]  # 保持容器运行
