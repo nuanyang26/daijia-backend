@@ -29,16 +29,17 @@ public class RedisConstant {
     public static final String ORDER_ACCEPT_MARK = "order:accept:mark:";
     public static final long ORDER_ACCEPT_MARK_EXPIRES_TIME = 15;
 
-    //抢新订单锁
-    public static final String ROB_NEW_ORDER_LOCK = "rob:new:order:lock:";
+    //service-order LockTemplateSupport 订单加锁标志 后+id
+    public static final String ORDER_LOCK_MARK = ORDER_ACCEPT_MARK;
     //等待获取锁的时间
-    public static final long ROB_NEW_ORDER_LOCK_WAIT_TIME = 1;
+    public static final long ORDER_LOCK_WAIT_TIME = 1;
     //加锁的时间
-    public static final long ROB_NEW_ORDER_LOCK_LEASE_TIME = 1;
+    public static final long ORDER_LOCK_LEASE_TIME = 1;
 
     //订单超时取消，延迟队列
     public static final String QUEUE_ORDER_CANCEL = "queue_order_cancel";
-    public static final long QUEUE_ORDER_CANCEL_TIME = 15;
+    //在订单标识过期前一个时间单位进行系统自动取消。
+    public static final long QUEUE_ORDER_CANCEL_TIME = ORDER_ACCEPT_MARK_EXPIRES_TIME - 1;
 
     //优惠券信息
     public static final String COUPON_INFO = "coupon:info:";
