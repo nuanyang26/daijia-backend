@@ -203,6 +203,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         //各种状态
         Integer[] statusArray = {
+                OrderStatus.WAITING_ACCEPT.getStatus(),
                 OrderStatus.ACCEPTED.getStatus(),
                 OrderStatus.DRIVER_ARRIVED.getStatus(),
                 OrderStatus.UPDATE_CART_INFO.getStatus(),

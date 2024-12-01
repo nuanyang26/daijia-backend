@@ -26,4 +26,7 @@ public class SystemConstant {
     //优惠券 未使用 已使用
     public static final int COUPON_STATUS_UNUSED = 1;
     public static final int COUPON_STATUS_USED = 2;
+
+    //xxl-job 创建并启动任务调度方法 newOrderTaskHandler cron // 5s一次
+    public static final String XXL_JOB_EXECUTOR_HANDLER_CRON = "0/5 0/1 * * * ?";
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import top.nuanyang26.daijia.common.constant.RedisConstant;
+import top.nuanyang26.daijia.common.constant.SystemConstant;
 import top.nuanyang26.daijia.dispatch.mapper.OrderJobMapper;
 import top.nuanyang26.daijia.dispatch.service.NewOrderService;
 import top.nuanyang26.daijia.dispatch.xxl.client.XxlJobClient;
@@ -61,7 +62,7 @@ public class NewOrderServiceImpl implements NewOrderService {
             // String corn 执行cron表达式
             // String desc 描述信息
             Long jobId = xxlJobClient.addAndStart("newOrderTaskHandler", "",
-                    "0 0/1 * * * ?",
+                    SystemConstant.XXL_JOB_EXECUTOR_HANDLER_CRON,
                     "新创建订单任务调度：" + newOrderTaskVo.getOrderId());
 
             //记录任务调度信息
@@ -135,8 +136,7 @@ public class NewOrderServiceImpl implements NewOrderService {
                 //新订单保存司机的临时队列，Redis里面List集合  订单-司机 1-n
                 String key = RedisConstant.DRIVER_ORDER_TEMP_LIST + driver.getDriverId();
                 redisTemplate.opsForList().leftPush(key, JSONObject.toJSONString(newOrderDataVo));
-                //过期时间：1分钟
-                redisTemplate.expire(key, 1, TimeUnit.MINUTES);
+                redisTemplate.expire(key, RedisConstant.DRIVER_ORDER_TEMP_LIST_EXPIRES_TIME, TimeUnit.MINUTES);
 //                TODO 这里逻辑不太对，key都是同一个，每增加一个订单也会为上一个快过期的订单续期为一分钟
 //                  还有一种情况，当订单存在时，又有一个司机开启了接单且在范围内，这样同一个订单过期时间被刷新了。
             }
